@@ -1,5 +1,7 @@
 function love.load()
+    love.window.setMode(1000, 768)
     anim8 = require 'libraries/anim8/anim8'
+    sti = require 'libraries/Simple-Tiled-Implementation/sti'
 
     sprites = {}
     sprites.playerSheet = love.graphics.newImage('sprites/playerSheet.png')
@@ -19,56 +21,32 @@ function love.load()
     world:addCollisionClass('Player'--[[, {ignores = {'Platform'}}]])
     world:addCollisionClass('Danger')
 
-    player = world:newRectangleCollider(360, 100, 40, 100, {collision_class = "Player"})
-    player:setFixedRotation(true)
-    player.speed = 240
-    player.animation = animations.idle
-    player.isMoving = false
+    require ('player')
 
     platform = world:newRectangleCollider(250, 400, 300, 100, {collision_class= "Platform"})
     platform:setType('static')
 
     dangerZone = world:newRectangleCollider(0, 550, 800, 50, {collision_class= "Danger"})
     dangerZone:setType('static')
+
+    loadMap()
 end
 
 function love.update(dt)
     world:update(dt)
-if player.body then
-    player.isMoving = false
-    local px, py = player:getPosition()
-    if love.keyboard.isDown('right') then
-        player:setX(px + player.speed*dt)
-        player.isMoving = true
-    end
-    if love.keyboard.isDown('left') then
-        player:setX(px + -player.speed*dt)
-        player.isMoving = true
-    end
-
-    if player:enter('Danger') then
-        player:destroy()
-    end
-end
-    if player.isMoving then
-        player.animation = animations.run
-    else
-        player.animation = animations.idle
-    end
-    player.animation:update(dt)
+    gameMap:update(dt)
+    playerUpdate (dt)
 end
 
-function love.draw ()
+function love.draw ()    
+    gameMap:drawLayer(gameMap.layers["Tile Layer 1"])
     world:draw()
-
-    local px, py = player:getPosition()
-    player.animation:draw(sprites.playerSheet, px, py, nil, 0.25, nil, 130, 300)
+    drawPlayer()
 end
 
 function love.keypressed(key)
-    if key == 'up' then
-        local colliders = world:queryRectangleArea(player:getX() - 20, player:getY() + 50, 40, 2, {'Platform'})
-        if #colliders > 0 then
+    if key == 'up' then        
+        if player.grounded then
             player:applyLinearImpulse(0, -4000)
         end
     end
@@ -81,4 +59,8 @@ function love.mousepressed(x, y, button)
             c:destroy()
         end
     end
+end
+
+function loadMap()
+    gameMap = sti("maps/level1.lua")
 end
