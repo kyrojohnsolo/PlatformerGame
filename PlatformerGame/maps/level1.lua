@@ -9,8 +9,8 @@ return {
   height = 12,
   tilewidth = 64,
   tileheight = 64,
-  nextlayerid = 5,
-  nextobjectid = 16,
+  nextlayerid = 6,
+  nextobjectid = 17,
   properties = {},
   tilesets = {
     {
@@ -126,6 +126,35 @@ return {
           shape = "rectangle",
           x = 2432,
           y = 320,
+          width = 64,
+          height = 64,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 5,
+      name = "Start",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 16,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 128,
+          y = 256,
           width = 64,
           height = 64,
           rotation = 0,
